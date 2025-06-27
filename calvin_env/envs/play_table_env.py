@@ -282,13 +282,17 @@ def get_env(dataset_path, obs_space=None, show_gui=True, **kwargs):
     if "scene" in kwargs:
         scene_cfg = OmegaConf.load(Path(calvin_env.__file__).parents[1] / "conf/scene" / f"{kwargs['scene']}.yaml")
         render_conf.scene = scene_cfg
+
     if not hydra.core.global_hydra.GlobalHydra.instance().is_initialized():
-        hydra.initialize(".")
-    env = hydra.utils.instantiate(render_conf.env, show_gui=show_gui, use_vr=False, use_scene_info=True)
+        with hydra.initialize(version_base=None, config_path=".", job_name="init_env"):
+            env = hydra.utils.instantiate(render_conf.env, show_gui=show_gui, use_vr=False, use_scene_info=True)
+    else:
+        env = hydra.utils.instantiate(render_conf.env, show_gui=show_gui, use_vr=False, use_scene_info=True)
+
     return env
 
 
-@hydra.main(config_path="../../conf", config_name="config_data_collection")
+@hydra.main(version_base=None, config_path="../../conf", config_name="config_data_collection")
 def run_env(cfg):
     env = hydra.utils.instantiate(cfg.env, show_gui=True, use_vr=False, use_scene_info=True)
 
