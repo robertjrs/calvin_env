@@ -38,4 +38,4 @@ class TactileSensor(Camera):
             self.digits.updateGUI(rgb, depth)
         rgb = np.concatenate(rgb, axis=2)
         depth = np.stack(depth, axis=2)
-        return rgb, depth
+        return rgb, depth, None

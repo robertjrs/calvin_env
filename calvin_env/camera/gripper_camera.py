@@ -41,6 +41,8 @@ class GripperCamera(Camera):
             viewMatrix=self.view_matrix,
             projectionMatrix=self.projection_matrix,
             physicsClientId=self.cid,
+            flags = p.ER_SEGMENTATION_MASK_OBJECT_AND_LINKINDEX
         )
         rgb_img, depth_img = self.process_rgbd(image, self.nearval, self.farval)
-        return rgb_img, depth_img
+        segmentation_img = image[-1]
+        return rgb_img, depth_img, segmentation_img

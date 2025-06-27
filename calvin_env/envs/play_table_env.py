@@ -182,16 +182,18 @@ class PlayTableSimEnv(gym.Env):
         assert self.cameras is not None
         rgb_obs = {}
         depth_obs = {}
+        segmentation_obs = {}
         for cam in self.cameras:
-            rgb, depth = cam.render()
+            rgb, depth, segmentation = cam.render()
             rgb_obs[f"rgb_{cam.name}"] = rgb
             depth_obs[f"depth_{cam.name}"] = depth
-        return rgb_obs, depth_obs
+            segmentation_obs[f"segmentation_{cam.name}"] = segmentation
+        return rgb_obs, depth_obs, segmentation_obs
 
     def get_obs(self):
         """Collect camera, robot and scene observations."""
-        rgb_obs, depth_obs = self.get_camera_obs()
-        obs = {"rgb_obs": rgb_obs, "depth_obs": depth_obs}
+        rgb_obs, depth_obs, segmentation_obs = self.get_camera_obs()
+        obs = {"rgb_obs": rgb_obs, "depth_obs": depth_obs, "segmentation_obs": segmentation_obs}
         obs.update(self.get_state_obs())
         return obs
 
